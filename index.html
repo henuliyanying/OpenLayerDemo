@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>HELLO WORLD</title>
+		<script type="text/javascript" src="http://api.tianditu.gov.cn/api?v=3.0&tk=68860a86c1f0bfdba7ce1186fc146703"></script>
+		<script type="text/javascript" src="bootstrap-3.3.7/dist/js/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="bootstrap-3.3.7/js/tab.js"></script>
+		<script type="text/javascript" src="plugins/laydate/laydate.js"></script>
+		<script type="text/javascript" src="index.js"></script>
+		<link rel="stylesheet" type="text/css" href="index.css" />
+		<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/dist/css/bootstrap.min.css" />
+		<script>
+			var map,handler, zoom = 4;
+			function onLoad() {
+				//初始化地图对象
+				map = new TMap("mapDiv");
+				//设置显示地图的中心点和级别
+				map.centerAndZoom(new TLngLat(105.15968,30.20951), zoom);
+				 //允许鼠标双击放大地图
+				map.enableScrollWheelZoom(); 
+            var config = {
+                showLabel: true,
+                color: "blue", weight: 3, opacity: 0.5, fillColor: "#FFFFFF", fillOpacity: 0.5
+            };
+            //创建标注工具对象
+            polygonTool = new T.PolygonTool(map, config);
+			}
+			function openPolygonTool() {
+	if (handler) handler.close();
+	handler = new T.PolygonTool(map);
+	handler.open();
+}
+
+function openPolylineTool() {
+	if (handler) handler.close();
+	handler = new T.PolylineTool(map);
+	handler.open();
+}
+
+function openMarkerTool() {
+	if (handler) handler.close();
+	handler = new T.MarkTool(map, {follow: true});
+	handler.open();
+}
+
+function openRectangleTool() {
+	if (handler) handler.close();
+	handler = new T.RectangleTool(map, {follow: true});
+	handler.open();
+}
+function openCircleTool() {
+	if (handler) handler.close();
+	handler = new T.CircleTool(map, {follow: true});
+	handler.open();
+}
+
+function getLayerCount() {
+	return map.getOverlays().length;
+
+}
+		</script>
+	</head>
+	<body onLoad="onLoad()">
+		<!-- 加载地图 -->
+		<div id="mapDiv" style="position:absolute;width:100%; height:100%"></div>
+		<div class="drawGraph">
+			<input type="button" value="点工具" onClick='openMarkerTool() '/>
+			<input type="button" value="多边形工具" onClick='openPolygonTool() '/>
+			<input type="button" value="线工具" onClick='openPolylineTool() '/>
+			<input type="button" value="矩形工具" onClick='openRectangleTool() '/>
+			<input type="button" value="画圆工具" onClick='openCircleTool() '/>
+			<input type="button" value="获取图层个数" onClick='alert(getLayerCount()) '/>
+			<input type="button" value="清除所有" onClick='map.clearOverLays()'/>
+		</div>
+		<!-- 测边框 -->
+		<div class="cebianlan">
+			<!-- 基本参数展示，高级参数折叠可展开 -->
+			<div id="allcontent">
+				<span class="sertitle">
+					&nbsp;基本信息
+				</span>
+				<span class="slideonSearch" style="right: 20px;">高级信息>>展开</span>
+			</div>
+
+			<!-- 产品选择 -->
+			<div id="productSelect">
+				&nbsp;&nbsp;&nbsp;产品品种:<br />
+				<select class="nowselect1" id="infoProdType" name="infoProdType" onchange="getProductNameInfo()">
+					<option value="-1">--请选择产品类型--</option>
+					<option value="1">水体类</option>
+					<option value="2">辐射类</option>
+					<option value="3">植被类</option>
+					<option value="4">几何类</option>
+					<option value="5">大气类</option>
+					<option value="6">陆表类</option>
+				</select>
+				<select class="nowselect_prodcutName" id="productName" name="prodModel">
+					<!-- <option>添加全部的产品品种</option> -->
+					<option value="-1">--请选择产品品种--</option>
+					<option value="1-1" id="1-1" style="display:none">水表反射率产品（WR）</option>
+					<option value="1-2" id="1-2" style="display:none">悬浮物浓度产品（SSC）</option>
+					<option value="1-3" id="1-3" style="display:none">水表温度产品（WST）</option>
+					<option value="2-1" id="2-1" style="display:none">辐亮度产品（RAT）</option>
+					<option value="2-2" id="2-2" style="display:none">亮温产品（BT）</option>
+					<option value="3-1" id="3-1" style="display:none">叶面积指数产品（LAI）</option>
+					<option value="3-2" id="3-2" style="display:none">植被覆盖度产品（VC）</option>
+					<option value="3-3" id="3-3" style="display:none">归一化植被指数产品（NDVI）</option>
+					<option value="4-1" id="4-1" style="display:none">正射产品（DOM）</option>
+					<option value="4-2" id="4-2" style="display:none">高程产品（DEM）</option>
+					<option value="5-1" id="5-1" style="display:none">气溶胶光学厚度产品（AOD）</option>
+					<option value="5-2" id="5-2" style="display:none">大气水气含量产品（CWV）</option>
+					<option value="6-1" id="6-1" style="display:none">土地覆盖类型产品（LC）</option>
+					<option value="6-2" id="6-2" style="display:none">地表反射率产品（LSR）</option>
+					<option value="6-3" id="6-3" style="display:none">地表温度产品（LST）</option>
+					<option value="6-4" id="6-4" style="display:none">地表土壤水分产品（SSM）</option>
+
+				</select>
+				<hr />
+			</div>
+			<!-- 区域选择 -->
+			<div id="areaSelect">
+				区域选择:
+				<ul class="nav nav-tabs">
+					<li><a href="#areaSelect_diy" data-toggle="tab">经纬度区域查询</a></li>
+					<li><a href="#areaSelect_Admi" data-toggle="tab">行政区域查询</a></li>
+				</ul>
+				<div id="myTabContent" class="tab-content">
+					<!-- 自定义区域--坐标值 -->
+					<div id="areaSelect_diy" class="tab-pane fade in active">
+						<div class="gradiv" style="padding-left: 24%;">
+							<span class="graspan">最大纬度:</span> <input type="text" name="regionNorth" id="regionNorth" value="" placeholder="-90-90"
+							 class="grainput">
+						</div>
+						<br>
+						<div class="gradiv">
+							<span class="graspan">最小经度:</span> <input type="text" name="regionWest" id="regionWest" value="" placeholder="-180-180"
+							 class="grainput">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<span class="graspan">最大经度:</span> <input type="text" name="regionEast" id="regionEast" value="" placeholder="-180-180"
+							 class="grainput">
+						</div>
+						<br>
+						<div class="gradiv" style="padding-left: 24%;">
+							<span class="graspan">最小纬度:</span> <input type="text" name="regionSouth" id="regionSouth" value="" placeholder="-90-90"
+							 class="grainput">
+						</div>
+					</div>
+
+					<!-- 省市县--坐标值 -->
+					<div id="areaSelect_Admi" class="tab-pane fade">
+						<div class="divisiondiv">
+							<select id="province" class="form-control" style="width: 32%; height: auto; display: inline" onchange="getProvinceCityCounty()">省：</select>
+							<select id="city" class="form-control" style="width: 32%; height: auto; display: inline" onchange="getProvinceCityCounty()"></select>
+							<select id="county" class="form-control" style="width: 32%; height: auto; display: inline" onchange="getProvinceCityCounty()"></select>
+							<input id="hiddenDivisionRegion" type="text" style="display:none" />
+						</div>
+					</div>
+				</div>
+				<hr />
+			</div>
+			<!-- 影像采集时间 -->
+			<div id="caijiTime" class="timeform">
+				<span class="selabel1">影像采集时间:</span>
+				<div class="timediv">
+					<input type="radio" id="allTime" name="time" checked="checked" value="5">
+					<label for="allTime" class="nowlable">全部&nbsp;&nbsp;&nbsp;&nbsp;</label>
+
+					<input type="radio" id="today" name="time" value="2">
+					<label for="today" class="nowlable">今天&nbsp;&nbsp;&nbsp;&nbsp;</label>
+
+					<input type="radio" id="week" name="time" value="3">
+					<label for="week" class="nowlable">一周内&nbsp;&nbsp;&nbsp;&nbsp;</label>
+
+					<input type="radio" id="month" name="time" value="4">
+					<label for="month" class="nowlable">一月内&nbsp;&nbsp;&nbsp;&nbsp;</label>
+
+					<input type="radio" id="own" onclick="init()" name="time" value="1">
+					<label for="own" class="nowlable">自定义</label>
+				</div>
+				<br>
+				<div class="timediv1">
+					<div class="ui-input-text" style="display: inline-block; font-size: 12px; width: 40%">
+						<input readonly id="startDate" name="startDate" style="cursor" class="form-control" type="text" placeholder="开始时间"
+						 value="" disabled /> <i class="hbvat-icon hbvat-icon-rili"></i>
+					</div>
+					-
+					<div class="ui-input-text" style="display: inline-block; font-size: 12px; width: 40%">
+						<input readonly id="endDate" name="endDate" style="cursor" class="form-control" type="text" placeholder="结束时间"
+						 value="" disabled /> <i class="hbvat-icon hbvat-icon-rili"></i>
+					</div>
+				</div>
+				<hr />
+			</div>
+			<!-- 卫星选择 -->
+			<div id="weixingSelect">
+				卫星选择
+			</div>
+
+			<!-- 重置、检索 -->
+			<section id="finbar">
+				<input type="reset" id="resetbtn" value="重置">
+				<input type="submit" id="subbtn" value="检索" onclick="getSearchCondition();">
+			</section>
+
+		</div>
+		<!-- 高级检索的div -->
+		<div id="advancedSearch">
+			<!-- 数据质量（云量-时间-满幅率） -->
+			<div id="dataQuatity">
+				<span>数据质量（云量-时间-满幅率）：</span>
+				<select class="dropdown">
+					<option>--请选择数据质量--</option>
+					<option>1</option>
+					<option>2</option>
+					<option>3</option>
+					<option>4</option>
+					<option>5</option>
+					<option>6</option>
+				</select>
+				<hr />
+			</div>
+			<!-- shp导入 -->
+			<div id="shpImport">
+				<span>shp导入：（文件名需要.zip文件形式，至少包括.dbf, .shp, .prj三类文件，文件名需为英文）</span>
+				<br />
+				<input type="file" name="myfile" accept="application/x-zip-compressed">
+				<input type="submit" onclick="fileInput()" value="上传">
+				<hr />
+			</div>
+			<!-- productNumber -->
+			<div id="productNumber">
+				产品号，景号<br />
+				文件名：<input type="text" /><br />
+				景&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" />
+				<hr />
+			</div>
+		</div>
+		
+		<script>
+			$(".slideonSearch").click(function() {
+				if ($("#advancedSearch").css("display") === "block") {
+					$("#advancedSearch").slideToggle("fast");
+					$(this).text("高级信息>>展开");
+					$(this).removeClass("active")
+					$("#searchinfor").css('height', '')
+				} else {
+					$("#advancedSearch").slideDown("fast");
+					$(this).text("高级信息<<收起");
+					$(this).addClass("active")
+					$("#searchinfor").css('height', '80%')
+				}
+			})
+		</script>
+	</body>
+</html>
